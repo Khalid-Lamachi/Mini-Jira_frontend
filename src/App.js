@@ -4,6 +4,7 @@ import LeftPanel from './components/auth/LeftPanel.jsx';
 import LoginPage from './pages/auth/LoginPage.jsx';
 import RegisterPage from './pages/auth/RegisterPage.jsx';
 import ProfilePage from './pages/global/ProfilePage.jsx';
+import ProfileUpdate from './pages/global/ProfileUpdate.jsx';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Route path="/login" element={<LoginPage/>} />
         <Route path="/register" element={<RegisterPage/>} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/ProfileUpdate" element={<ProfileUpdate />} />
       </Routes>
     </BrowserRouter>
     </React.StrictMode>
