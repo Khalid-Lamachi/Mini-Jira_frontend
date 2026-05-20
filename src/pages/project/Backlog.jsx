@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
+import s from '../../styles/Profile.module.css';
 
 import Sidebar from '../../components/layout/Sidebar';
 import TopBar from '../../components/layout/TopBar';
-import s from '../../styles/Profile.module.css';
+
 
 import FilterBar from '../../components/backlog/FilterBar';
 import SprintBlock from '../../components/backlog/SprintBlock';
 import { initialSprints, initialTasks } from '../../data/projectsMockData';
+
+import { taskService } from '../../services/taskService';
 
 import '../../styles/Backlog.css';
 
@@ -17,7 +20,9 @@ export default function Backlog() {
 
     //  STATES DE LA DATA
     const [sprints] = useState(initialSprints);
-    const [tasks] = useState(initialTasks);
+
+
+    const [tasks, setTasks] = useState(initialTasks);
 
     // STATES DES FILTRES
     const [search, setSearch] = useState('');
@@ -41,6 +46,23 @@ export default function Backlog() {
         // La tâche est conservée seulement si elle passe les deux filtres
         return matchesSearch && matchesType;
     });
+
+    const handleAddStory = async (sprintId) => {
+        const title = window.prompt("Entrez le titre du nouveau ticket :");
+        if (!title || title.trim() === "") return;
+
+        try {
+            // 1. On délègue le travail au Service ! (On attend la réponse du "serveur")
+            const newTask = await taskService.createTask(title, sprintId);
+
+            // 2. Une fois que le serveur a répondu OK, on met à jour l'interface React
+            setTasks([...tasks, newTask]);
+
+        } catch (error) {
+            console.error("Erreur lors de la création du ticket :", error);
+            alert("Impossible de créer le ticket. Veuillez réessayer.");
+        }
+    };
 
     return (
         <div className="app-shell">
@@ -85,6 +107,7 @@ export default function Backlog() {
                                     key={sprint.id}
                                     sprint={sprint}
                                     sprintTasks={sprintTasks}
+                                    onAddStory={handleAddStory}
                                 />
                             );
                         })}

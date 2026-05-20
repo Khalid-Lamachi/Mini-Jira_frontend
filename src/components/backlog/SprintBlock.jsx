@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import StoryRow from './StoryRow';
 
-export default function SprintBlock({ sprint, sprintTasks }) {
+export default function SprintBlock({ sprint, sprintTasks, onAddStory }) {
     const [isExpanded, setIsExpanded] = useState(true);
 
     // status badge
@@ -84,7 +84,10 @@ export default function SprintBlock({ sprint, sprintTasks }) {
                         </div>
                     )}
 
-                    <div className="add-story">
+                    <div
+                        className="add-story"
+                        onClick={() => onAddStory(sprint.id)}
+                    >
                         <span style={{ fontSize: '14px', fontWeight: 'bold' }}>+</span> Créer un ticket
                     </div>
                 </div>
