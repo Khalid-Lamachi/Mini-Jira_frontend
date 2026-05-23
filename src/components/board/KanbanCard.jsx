@@ -9,7 +9,7 @@ const PRIORITY_CONFIG = {
   low: 'low',
 };
 
-function KanbanCard({ task, index }) {
+function KanbanCard({ task, index, onClick }) {
   if (!task) return null;
 
   const { id, title, priority, status, tags = [], points, assignee } = task;
@@ -33,6 +33,7 @@ function KanbanCard({ task, index }) {
             // Légère élévation si on est en train de la déplacer
             boxShadow: snapshot.isDragging ? '0 5px 15px rgba(0,0,0,0.15)' : undefined,
           }}
+          onClick={onClick}
         >
           {isDone ? (
             <svg className="kanban-card-done-icon" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">

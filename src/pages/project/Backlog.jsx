@@ -69,7 +69,7 @@ export default function Backlog() {
     setTasks(prev => prev.map(t => t.id === updatedTask.id ? updatedTask : t));
     setSelectedTaskId(null);
 
-    taskService.updateTaskDetails(updatedTask.id, updatedTask).catch(err => {
+    taskService.updateTask(updatedTask.id, updatedTask).catch(err => {
       console.error("Erreur lors de la sauvegarde de la tâche", err);
     });
   };

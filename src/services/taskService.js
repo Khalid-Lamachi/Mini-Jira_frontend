@@ -46,7 +46,7 @@ export const taskService = {
         });
     },
 
-    updateTaskDetails: async (taskId, updatedData) => {
+    updateTask: async (taskId, updatedData) => {
         return new Promise((resolve) => {
             setTimeout(() => {
                 console.log(`[API] Détails de la tâche ${taskId} mis à jour :`, updatedData);

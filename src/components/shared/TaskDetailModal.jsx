@@ -12,13 +12,7 @@ const STATUS_OPTIONS = [
   { value: 'done', label: 'Terminé', colorClass: 'dot-done' }
 ];
 
-const POINTS_OPTIONS = [
-  { value: 1, label: '1' },
-  { value: 2, label: '2' },
-  { value: 3, label: '3' },
-  { value: 5, label: '5' },
-  { value: 8, label: '8' }
-];
+// Removed POINTS_OPTIONS since we now use a free number input
 
 const TaskDetailModal = ({ task, onClose, onSave }) => {
   // On initialise l'état avec les données de la tâche cliquée
@@ -71,11 +65,13 @@ const TaskDetailModal = ({ task, onClose, onSave }) => {
 
               <div>
                 <label className="standard-label">Points d'effort</label>
-                <StoryPointsRadio 
-                  name="points"
-                  options={POINTS_OPTIONS}
-                  selectedValue={editedTask.points}
-                  onChange={(val) => setEditedTask({...editedTask, points: val})}
+                <input 
+                  type="number"
+                  min="0"
+                  className="standard-textarea"
+                  style={{ minHeight: 'auto', height: '36px', padding: '8px 12px' }}
+                  value={editedTask.points || 0}
+                  onChange={(e) => setEditedTask({...editedTask, points: parseInt(e.target.value) || 0})}
                 />
               </div>
             </div>
