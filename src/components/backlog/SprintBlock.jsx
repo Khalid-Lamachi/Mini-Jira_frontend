@@ -1,8 +1,28 @@
 import React, { useState } from 'react';
 import StoryRow from './StoryRow';
 
+<<<<<<< Updated upstream
 export default function SprintBlock({ sprint, sprintTasks, onAddStory }) {
+=======
+export default function SprintBlock({ sprint, sprintTasks, onAddTask, onTagChange }) {
+>>>>>>> Stashed changes
     const [isExpanded, setIsExpanded] = useState(true);
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [isCreatingTask, setIsCreatingTask] = useState(false);
+    const [newTaskTitle, setNewTaskTitle] = useState('');
+
+    const handleCreateTask = (e) => {
+        if (e.key === 'Enter' && newTaskTitle.trim()) {
+            if (onAddTask) {
+                onAddTask(sprint.id, newTaskTitle.trim());
+            }
+            setIsCreatingTask(false);
+            setNewTaskTitle('');
+        } else if (e.key === 'Escape') {
+            setIsCreatingTask(false);
+            setNewTaskTitle('');
+        }
+    };
 
     // status badge
     let badgeClass = 'b-planned';
@@ -43,8 +63,10 @@ export default function SprintBlock({ sprint, sprintTasks, onAddStory }) {
                 <span className="sprint-title">{sprint.name}</span>
 
                 {/* Format de date désiré : 11 mai -> 17 mai 2026 */}
-                {sprint.startDate && sprint.endDate && (
+                {sprint.startDate && sprint.endDate ? (
                     <span className="sprint-dates">{sprint.startDate} -> {sprint.endDate}</span>
+                ) : (
+                    sprint.id !== 'backlog' && <button className="btn-xs" style={{ marginLeft: 8 }}>Ajouter des dates</button>
                 )}
 
                 {/* Masquer le badge if conteneur de Backlog général */}
@@ -67,7 +89,20 @@ export default function SprintBlock({ sprint, sprintTasks, onAddStory }) {
                     {sprint.status === 'active' && (
                         <button className="btn-xs">Terminer le sprint</button>
                     )}
-                    <button className="btn-xs">•••</button>
+                    <div style={{ position: 'relative' }}>
+                        <button className="btn-xs" onClick={() => setMenuOpen(!menuOpen)}>•••</button>
+                        {menuOpen && (
+                            <div className="sprint-menu" style={{
+                                position: 'absolute', right: 0, top: '100%', marginTop: '4px',
+                                background: 'var(--color-background-primary)', border: '1px solid var(--color-border-tertiary)',
+                                borderRadius: '4px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', zIndex: 10,
+                                display: 'flex', flexDirection: 'column', width: '120px'
+                            }}>
+                                <span style={{ padding: '8px 12px', fontSize: '12px', cursor: 'pointer' }} onClick={() => setMenuOpen(false)}>Modifier le sprint</span>
+                                <span style={{ padding: '8px 12px', fontSize: '12px', cursor: 'pointer', color: 'var(--color-danger-red)' }} onClick={() => setMenuOpen(false)}>Supprimer le sprint</span>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 
@@ -76,7 +111,11 @@ export default function SprintBlock({ sprint, sprintTasks, onAddStory }) {
                 <div className="sprint-content">
                     {sprintTasks.length > 0 ? (
                         sprintTasks.map(task => (
-                            <StoryRow key={task.id} task={task} />
+                            <StoryRow 
+                                key={task.id} 
+                                task={task} 
+                                onTagChange={(newTag, tagIndex) => onTagChange && onTagChange(task.id, newTag, tagIndex)}
+                            />
                         ))
                     ) : (
                         <div style={{ padding: '20px', textAlign: 'center', color: 'var(--color-text-tertiary)', fontSize: '12px' }}>
@@ -84,12 +123,37 @@ export default function SprintBlock({ sprint, sprintTasks, onAddStory }) {
                         </div>
                     )}
 
+<<<<<<< Updated upstream
                     <div
                         className="add-story"
                         onClick={() => onAddStory(sprint.id)}
                     >
                         <span style={{ fontSize: '14px', fontWeight: 'bold' }}>+</span> Créer un ticket
                     </div>
+=======
+                    {isCreatingTask ? (
+                        <div style={{ padding: '8px 14px', borderTop: '1px solid var(--color-border-tertiary)' }}>
+                            <input 
+                                autoFocus
+                                type="text" 
+                                value={newTaskTitle}
+                                onChange={(e) => setNewTaskTitle(e.target.value)}
+                                onKeyDown={handleCreateTask}
+                                placeholder="Que faut-il faire ? (Appuyez sur Entrée pour créer)"
+                                style={{ width: '100%', padding: '6px 10px', fontSize: '13px', borderRadius: '4px', border: '1px solid var(--color-primary-blue)', outline: 'none' }}
+                                onBlur={() => {
+                                    if (!newTaskTitle.trim()) {
+                                        setIsCreatingTask(false);
+                                    }
+                                }}
+                            />
+                        </div>
+                    ) : (
+                        <div className="add-story" onClick={() => setIsCreatingTask(true)}>
+                            <span style={{ fontSize: '14px', fontWeight: 'bold' }}>+</span> Créer un ticket
+                        </div>
+                    )}
+>>>>>>> Stashed changes
                 </div>
             )}
 
