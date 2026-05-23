@@ -3,6 +3,7 @@ import { DragDropContext } from '@hello-pangea/dnd';
 import ProjectLayout from '../../components/layout/ProjectLayout';
 import KanbanColumn from '../../components/board/KanbanColumn';
 import BoardControlBar from '../../components/board/BoardControlBar';
+import TaskDetailModal from '../../components/shared/TaskDetailModal';
 import { initialSprints, initialTasks } from '../../data/projectsMockData';
 import { taskService } from '../../services/taskService';
 
@@ -23,6 +24,7 @@ export default function Board() {
   // Nouveaux états pour la barre de contrôle
   const [search, setSearch] = useState('');
   const [activeAssignees, setActiveAssignees] = useState([]);
+  const [selectedTaskId, setSelectedTaskId] = useState(null);
 
   // Trouver le sprint actif
   const activeSprint = useMemo(() => sprints.find((s) => s.status === 'active'), [sprints]);
@@ -145,6 +147,15 @@ export default function Board() {
     setActiveAssignees([]);
   };
 
+  const handleUpdateTask = (updatedTask) => {
+    setTasks(prev => prev.map(t => t.id === updatedTask.id ? updatedTask : t));
+    setSelectedTaskId(null);
+
+    taskService.updateTask(updatedTask.id, updatedTask).catch(err => {
+      console.error("Erreur lors de la sauvegarde de la tâche", err);
+    });
+  };
+
   const handleCompleteSprint = () => {
     if (window.confirm(`Voulez-vous vraiment clôturer le sprint "${activeSprint.name}" ?\nLes tâches non terminées pourront être réassignées.`)) {
       setSprints(prev => prev.map(s => 
@@ -189,12 +200,21 @@ export default function Board() {
                   status={col.id}
                   tasks={colTasks}
                   onAddTask={handleAddTask}
+                  onTaskClick={setSelectedTaskId}
                 />
               );
             })}
           </div>
         </DragDropContext>
       </div>
+
+      {selectedTaskId && (
+        <TaskDetailModal 
+          task={tasks.find(t => t.id === selectedTaskId)}
+          onClose={() => setSelectedTaskId(null)}
+          onSave={handleUpdateTask}
+        />
+      )}
     </ProjectLayout>
   );
 }

@@ -3,6 +3,7 @@ import { DragDropContext } from "@hello-pangea/dnd";
 import ProjectLayout from "../../components/layout/ProjectLayout";
 import FilterBar from "../../components/backlog/FilterBar";
 import SprintBlock from "../../components/backlog/SprintBlock";
+import TaskDetailModal from "../../components/shared/TaskDetailModal";
 import { initialSprints, initialTasks } from "../../data/projectsMockData";
 import { taskService } from "../../services/taskService";
 
@@ -10,6 +11,7 @@ import "../../styles/Backlog.css";
 
 export default function Backlog() {
   const [activeTab, setActiveTab] = useState("backlog");
+  const [selectedTaskId, setSelectedTaskId] = useState(null);
 
   //  STATES DE LA DATA
   const [sprints] = useState(initialSprints);
@@ -60,6 +62,15 @@ export default function Backlog() {
     // Appel API en arrière-plan
     taskService.updateTaskTag(taskId, newTag, tagIndex).catch(error => {
       console.error("Erreur lors de la modification du tag", error);
+    });
+  };
+
+  const handleUpdateTask = (updatedTask) => {
+    setTasks(prev => prev.map(t => t.id === updatedTask.id ? updatedTask : t));
+    setSelectedTaskId(null);
+
+    taskService.updateTask(updatedTask.id, updatedTask).catch(err => {
+      console.error("Erreur lors de la sauvegarde de la tâche", err);
     });
   };
 
@@ -242,11 +253,20 @@ export default function Backlog() {
                 sortConfig={sortConfig}
                 onAddTask={handleAddTask}
                 onTagChange={handleTagChange}
+                onTaskClick={setSelectedTaskId}
               />
             );
           })}
         </div>
       </DragDropContext>
+
+      {selectedTaskId && (
+        <TaskDetailModal 
+          task={tasks.find(t => t.id === selectedTaskId)}
+          onClose={() => setSelectedTaskId(null)}
+          onSave={handleUpdateTask}
+        />
+      )}
     </ProjectLayout>
   );
 }

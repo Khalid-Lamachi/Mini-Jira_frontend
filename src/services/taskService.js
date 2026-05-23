@@ -44,5 +44,14 @@ export const taskService = {
                 resolve(true);
             }, 300);
         });
+    },
+
+    updateTask: async (taskId, updatedData) => {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                console.log(`[API] Détails de la tâche ${taskId} mis à jour :`, updatedData);
+                resolve(true);
+            }, 400);
+        });
     }
 };

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Droppable } from '@hello-pangea/dnd';
 import KanbanCard from './KanbanCard';
 
-function KanbanColumn({ title, status, tasks, onAddTask }) {
+function KanbanColumn({ title, status, tasks, onAddTask, onTaskClick }) {
   const [isCreatingTask, setIsCreatingTask] = useState(false);
   const [newTaskTitle, setNewTaskTitle] = useState('');
 
@@ -39,7 +39,12 @@ function KanbanColumn({ title, status, tasks, onAddTask }) {
             }}
           >
             {tasks.map((task, index) => (
-              <KanbanCard key={task.id} task={task} index={index} />
+              <KanbanCard 
+                key={task.id} 
+                task={task} 
+                index={index} 
+                onClick={() => onTaskClick && onTaskClick(task.id)}
+              />
             ))}
 
             {isCreatingTask && (
