@@ -35,5 +35,23 @@ export const taskService = {
                 resolve(true);
             }, 300);
         });
+    },
+
+    updateTaskStatus: async (taskId, newStatus, newIndex) => {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                console.log(`[API] Statut de la tâche ${taskId} mis à jour : ${newStatus} à l'index ${newIndex}`);
+                resolve(true);
+            }, 300);
+        });
+    },
+
+    updateTaskDetails: async (taskId, updatedData) => {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                console.log(`[API] Détails de la tâche ${taskId} mis à jour :`, updatedData);
+                resolve(true);
+            }, 400);
+        });
     }
 };

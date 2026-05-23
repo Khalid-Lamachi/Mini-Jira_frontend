@@ -37,7 +37,7 @@ const TAG_CONFIG = {
   tech: { className: "tag t-tech", label: "Tech" },
 };
 
-function StoryRow({ task, onTagChange, index, isDragDisabled = false }) {
+function StoryRow({ task, onTagChange, index, isDragDisabled = false, onClick }) {
   if (!task) return null;
 
   const { id, title, priority, status, tags = [], points, assignee } = task;
@@ -75,6 +75,7 @@ function StoryRow({ task, onTagChange, index, isDragDisabled = false }) {
             ...provided.draggableProps.style,
             backgroundColor: snapshot.isDragging ? 'var(--color-background-secondary)' : 'var(--color-background-primary)',
           }}
+          onClick={onClick}
         >
           <span className="drag-handle" {...provided.dragHandleProps}>⠿</span>
           <div className={prio.dotClass} />

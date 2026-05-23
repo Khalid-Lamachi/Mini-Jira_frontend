@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Droppable } from '@hello-pangea/dnd';
 import StoryRow from './StoryRow';
 
-export default function SprintBlock({ sprint, sprintTasks, onAddTask, onTagChange, sortConfig }) {
+export default function SprintBlock({ sprint, sprintTasks, onAddTask, onTagChange, sortConfig, onTaskClick }) {
     const [isExpanded, setIsExpanded] = useState(true);
     const [menuOpen, setMenuOpen] = useState(false);
     const [isCreatingTask, setIsCreatingTask] = useState(false);
@@ -125,6 +125,7 @@ export default function SprintBlock({ sprint, sprintTasks, onAddTask, onTagChang
                                         index={index}
                                         isDragDisabled={!!sortConfig}
                                         onTagChange={(newTag, tagIndex) => onTagChange && onTagChange(task.id, newTag, tagIndex)}
+                                        onClick={() => onTaskClick && onTaskClick(task.id)}
                                     />
                                 ))
                             ) : (
