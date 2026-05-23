@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
+import { Droppable } from '@hello-pangea/dnd';
 import StoryRow from './StoryRow';
 
-<<<<<<< Updated upstream
-export default function SprintBlock({ sprint, sprintTasks, onAddStory }) {
-=======
-export default function SprintBlock({ sprint, sprintTasks, onAddTask, onTagChange }) {
->>>>>>> Stashed changes
+export default function SprintBlock({ sprint, sprintTasks, onAddTask, onTagChange, sortConfig }) {
     const [isExpanded, setIsExpanded] = useState(true);
     const [menuOpen, setMenuOpen] = useState(false);
     const [isCreatingTask, setIsCreatingTask] = useState(false);
@@ -108,30 +105,37 @@ export default function SprintBlock({ sprint, sprintTasks, onAddTask, onTagChang
 
             {/* LISTE DES TICKETS INTERNES */}
             {isExpanded && (
-                <div className="sprint-content">
-                    {sprintTasks.length > 0 ? (
-                        sprintTasks.map(task => (
-                            <StoryRow 
-                                key={task.id} 
-                                task={task} 
-                                onTagChange={(newTag, tagIndex) => onTagChange && onTagChange(task.id, newTag, tagIndex)}
-                            />
-                        ))
-                    ) : (
-                        <div style={{ padding: '20px', textAlign: 'center', color: 'var(--color-text-tertiary)', fontSize: '12px' }}>
-                            Aucun ticket planifié dans ce bloc.
-                        </div>
-                    )}
+                <Droppable droppableId={sprint.id} isDropDisabled={!!sortConfig}>
+                    {(provided, snapshot) => (
+                        <div 
+                            className="sprint-content"
+                            ref={provided.innerRef}
+                            {...provided.droppableProps}
+                            style={{
+                                backgroundColor: snapshot.isDraggingOver ? 'var(--color-primary-blue-light)' : 'transparent',
+                                transition: 'background-color 0.2s ease',
+                                minHeight: '10px'
+                            }}
+                        >
+                            {sprintTasks.length > 0 ? (
+                                sprintTasks.map((task, index) => (
+                                    <StoryRow 
+                                        key={task.id} 
+                                        task={task} 
+                                        index={index}
+                                        isDragDisabled={!!sortConfig}
+                                        onTagChange={(newTag, tagIndex) => onTagChange && onTagChange(task.id, newTag, tagIndex)}
+                                    />
+                                ))
+                            ) : (
+                                <div style={{ padding: '20px', textAlign: 'center', color: 'var(--color-text-tertiary)', fontSize: '12px' }}>
+                                    Aucun ticket planifié dans ce bloc.
+                                </div>
+                            )}
+                            
+                            {provided.placeholder}
 
-<<<<<<< Updated upstream
-                    <div
-                        className="add-story"
-                        onClick={() => onAddStory(sprint.id)}
-                    >
-                        <span style={{ fontSize: '14px', fontWeight: 'bold' }}>+</span> Créer un ticket
-                    </div>
-=======
-                    {isCreatingTask ? (
+                            {isCreatingTask ? (
                         <div style={{ padding: '8px 14px', borderTop: '1px solid var(--color-border-tertiary)' }}>
                             <input 
                                 autoFocus
@@ -153,8 +157,9 @@ export default function SprintBlock({ sprint, sprintTasks, onAddTask, onTagChang
                             <span style={{ fontSize: '14px', fontWeight: 'bold' }}>+</span> Créer un ticket
                         </div>
                     )}
->>>>>>> Stashed changes
-                </div>
+                        </div>
+                    )}
+                </Droppable>
             )}
 
         </div>

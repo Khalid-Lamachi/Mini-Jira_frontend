@@ -1,4 +1,5 @@
 import React from "react";
+import { Draggable } from "@hello-pangea/dnd";
 
 const PRIORITY_CONFIG = {
   critical: {
@@ -36,7 +37,7 @@ const TAG_CONFIG = {
   tech: { className: "tag t-tech", label: "Tech" },
 };
 
-function StoryRow({ task, onTagChange }) {
+function StoryRow({ task, onTagChange, index, isDragDisabled = false }) {
   if (!task) return null;
 
   const { id, title, priority, status, tags = [], points, assignee } = task;
@@ -64,56 +65,68 @@ function StoryRow({ task, onTagChange }) {
   };
 
   return (
-    <div className="story-row">
-      <span className="drag-handle">⠿</span>
-      <div className={prio.dotClass} />
-      <span className="story-id">{id}</span>
-      <span className={prio.badgeClass}>{prio.label}</span>
-      <span className="story-title">{title}</span>
-
-      <div className="story-tags">
-        {tags.map((tag, index) => {
-          const t = TAG_CONFIG[tag.toLowerCase()] ?? {
-            className: "tag",
-            label: tag,
-          };
-          return (
-            <span
-              key={`${tag}-${index}`}
-              className={t.className}
-              onClick={(e) => handleTagClick(index, e)}
-              style={{ cursor: "pointer" }}
-              title="Cliquez pour changer le tag"
-            >
-              {t.label}
-            </span>
-          );
-        })}
-      </div>
-
-      <span className={stat.className}>{stat.label}</span>
-      <span className="story-pts">{points ? `${points} pts` : "-"}</span>
-
-      {assignee ? (
-        <div
-          className="story-av"
+    <Draggable draggableId={task.id} index={index} isDragDisabled={isDragDisabled}>
+      {(provided, snapshot) => (
+        <div 
+          className="story-row"
+          ref={provided.innerRef}
+          {...provided.draggableProps}
           style={{
-            background: assignee.bgColor || "#e6f1fb",
-            color: assignee.textColor || "#185fa5",
+            ...provided.draggableProps.style,
+            backgroundColor: snapshot.isDragging ? 'var(--color-background-secondary)' : 'var(--color-background-primary)',
           }}
-          title={assignee.name || assignee}
         >
-          {assignee.initials || getInitials(assignee.name || assignee)}
-        </div>
-      ) : (
-        <div
-          className="story-av"
-          style={{ background: "#f4f5f7", color: "#8993a4" }}
-        >
-          —
+          <span className="drag-handle" {...provided.dragHandleProps}>⠿</span>
+          <div className={prio.dotClass} />
+          <span className="story-id">{id}</span>
+          <span className={prio.badgeClass}>{prio.label}</span>
+          <span className="story-title">{title}</span>
+
+          <div className="story-tags">
+            {tags.map((tag, tagIdx) => {
+              const t = TAG_CONFIG[tag.toLowerCase()] ?? {
+                className: "tag",
+                label: tag,
+              };
+              return (
+                <span
+                  key={`${tag}-${tagIdx}`}
+                  className={t.className}
+                  onClick={(e) => handleTagClick(tagIdx, e)}
+                  style={{ cursor: "pointer" }}
+                  title="Cliquez pour changer le tag"
+                >
+                  {t.label}
+                </span>
+              );
+            })}
+          </div>
+
+          <span className={stat.className}>{stat.label}</span>
+          <span className="story-pts">{points ? `${points} pts` : "-"}</span>
+
+          {assignee ? (
+            <div
+              className="story-av"
+              style={{
+                background: assignee.bgColor || "#e6f1fb",
+                color: assignee.textColor || "#185fa5",
+              }}
+              title={assignee.name || assignee}
+            >
+              {assignee.initials || getInitials(assignee.name || assignee)}
+            </div>
+          ) : (
+            <div
+              className="story-av"
+              style={{ background: "#f4f5f7", color: "#8993a4" }}
+            >
+              —
+            </div>
+          )}
         </div>
       )}
-    </div>
+    </Draggable>
   );
 }
 

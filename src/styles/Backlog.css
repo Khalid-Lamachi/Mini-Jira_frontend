@@ -56,7 +56,8 @@
   cursor: pointer;
   transition: all 150ms ease;
 }
-.filter-chip:hover {
+.filter-chip:hover,
+.filter-chip.active {
   border-color: var(--color-primary-blue);
   background: var(--color-primary-blue-light);
   color: var(--color-primary-blue);

@@ -17,5 +17,23 @@ export const taskService = {
                 resolve(newTask);
             }, 500);
         });
+    },
+
+    updateTaskTag: async (taskId, newTag, tagIndex = 0) => {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                console.log(`[API] Tag mis à jour pour la tâche ${taskId}: ${newTag}`);
+                resolve(true);
+            }, 300);
+        });
+    },
+
+    moveTask: async (taskId, newSprintId, newIndex) => {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                console.log(`[API] Tâche ${taskId} déplacée vers sprint ${newSprintId} à l'index ${newIndex}`);
+                resolve(true);
+            }, 300);
+        });
     }
 };
