@@ -10,6 +10,7 @@ import Board from './pages/project/Board.jsx';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import TeamsPage from './pages/global/TeamsPage.jsx';
 import ProjectsPage from './pages/global/ProjectsPage.jsx';
+import TeamDetailsPage from './pages/global/TeamDetailsPage.jsx'
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/board" element={<Board />} />
 
         <Route path="/projects" element={<ProjectsPage />} />
+        <Route path="/detailsTeam/:id" element={<TeamDetailsPage />} />
       </Routes>
     </BrowserRouter>
     </React.StrictMode>
